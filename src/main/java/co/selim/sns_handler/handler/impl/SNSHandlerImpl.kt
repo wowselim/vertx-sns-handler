@@ -63,22 +63,40 @@ internal class SNSHandlerImpl(private val httpClient: HttpClient) : SNSHandler {
 
   private fun handleNotification(notification: Notification): Future<Unit> {
     return when (notificationHandler.handle(notification)) {
-      NotificationHandler.Acknowledge -> Future.succeededFuture(/* Nothing to do */)
-      NotificationHandler.Unsubscribe -> httpClient.visitURL(notification.unsubscribeURL)
+      NotificationHandler.Acknowledge -> {
+        logger.debug("Acknowledged notification on topic ${notification.topicArn}")
+        Future.succeededFuture(/* Nothing to do */)
+      }
+      NotificationHandler.Unsubscribe -> {
+        logger.debug("Unsubscribing from topic ${notification.topicArn}")
+        httpClient.visitURL(notification.unsubscribeURL)
+      }
     }
   }
 
   private fun handleSubscriptionConfirmation(subscriptionConfirmation: SubscriptionConfirmation): Future<Unit> {
     return when (subscriptionConfirmationHandler.handle(subscriptionConfirmation)) {
-      SubscriptionConfirmationHandler.Acknowledge -> httpClient.visitURL(subscriptionConfirmation.subscribeURL)
-      SubscriptionConfirmationHandler.Ignore -> Future.succeededFuture(/* Nothing to do */)
+      SubscriptionConfirmationHandler.Acknowledge -> {
+        logger.debug("Confirming subscription to topic ${subscriptionConfirmation.topicArn}")
+        httpClient.visitURL(subscriptionConfirmation.subscribeURL)
+      }
+      SubscriptionConfirmationHandler.Ignore -> {
+        logger.debug("Ignoring subscription confirmation for topic ${subscriptionConfirmation.topicArn}")
+        Future.succeededFuture(/* Nothing to do */)
+      }
     }
   }
 
   private fun handleUnsubscribeConfirmation(unsubscribeConfirmation: UnsubscribeConfirmation): Future<Unit> {
     return when (unsubscribeConfirmationHandler.handle(unsubscribeConfirmation)) {
-      UnsubscribeConfirmationHandler.Acknowledge -> Future.succeededFuture(/* Nothing to do */)
-      UnsubscribeConfirmationHandler.Resubscribe -> httpClient.visitURL(unsubscribeConfirmation.subscribeURL)
+      UnsubscribeConfirmationHandler.Acknowledge -> {
+        logger.debug("Confirming unsubscribe to topic ${unsubscribeConfirmation.topicArn}")
+        Future.succeededFuture(/* Nothing to do */)
+      }
+      UnsubscribeConfirmationHandler.Resubscribe -> {
+        logger.debug("Resubscribing to topic ${unsubscribeConfirmation.topicArn}")
+        httpClient.visitURL(unsubscribeConfirmation.subscribeURL)
+      }
     }
   }
 
@@ -86,6 +104,7 @@ internal class SNSHandlerImpl(private val httpClient: HttpClient) : SNSHandler {
     val options = RequestOptions().setMethod(HttpMethod.GET).setAbsoluteURI(url)
     return request(options)
       .flatMap { it.connect() }
+      .onFailure { logger.error("Failed to open URL $url", it) }
       .map(Unit)
   }
 }
