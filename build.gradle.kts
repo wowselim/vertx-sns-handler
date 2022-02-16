@@ -17,7 +17,6 @@ val vertxVersion = "4.2.4"
 dependencies {
   implementation(platform("io.vertx:vertx-stack-depchain:$vertxVersion"))
   implementation("io.vertx:vertx-web")
-  implementation("io.vertx:vertx-reactive-streams") // REMOVE
   implementation(kotlin("stdlib-jdk8"))
 
   implementation("org.slf4j:slf4j-api:1.7.35")
