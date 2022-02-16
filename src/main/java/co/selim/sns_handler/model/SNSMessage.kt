@@ -1,6 +1,6 @@
 package co.selim.sns_handler.model
 
-interface SNSMessage {
+sealed interface SNSMessage {
   val type: Type
 
   enum class Type(val value: String) {
