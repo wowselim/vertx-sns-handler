@@ -30,6 +30,10 @@ dependencies {
 val compileKotlin: KotlinCompile by tasks
 compileKotlin.kotlinOptions.jvmTarget = "11"
 
+kotlin {
+  explicitApi()
+}
+
 tasks.withType<Test> {
   useJUnitPlatform()
   testLogging {

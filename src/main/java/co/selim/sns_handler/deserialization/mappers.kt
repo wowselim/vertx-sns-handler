@@ -8,7 +8,7 @@ import io.vertx.core.json.JsonObject
 import java.time.Instant
 import java.util.*
 
-fun JsonObject.toNotification() = Notification(
+internal fun JsonObject.toNotification() = Notification(
   message = message,
   messageId = messageId,
   signature = signature,
@@ -21,7 +21,7 @@ fun JsonObject.toNotification() = Notification(
   unsubscribeURL = unsubscribeURL,
 )
 
-fun JsonObject.toSubscriptionConfirmation() = SubscriptionConfirmation(
+internal fun JsonObject.toSubscriptionConfirmation() = SubscriptionConfirmation(
   message = message,
   messageId = messageId,
   signature = signature,
@@ -34,7 +34,7 @@ fun JsonObject.toSubscriptionConfirmation() = SubscriptionConfirmation(
   type = type,
 )
 
-fun JsonObject.toUnsubscribeConfirmation() = UnsubscribeConfirmation(
+internal fun JsonObject.toUnsubscribeConfirmation() = UnsubscribeConfirmation(
   message = message,
   messageId = messageId,
   signature = signature,

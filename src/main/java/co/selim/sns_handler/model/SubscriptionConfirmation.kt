@@ -3,7 +3,7 @@ package co.selim.sns_handler.model
 import java.time.Instant
 import java.util.*
 
-data class SubscriptionConfirmation(
+public data class SubscriptionConfirmation(
   val message: String,
   val messageId: UUID,
   val signature: String,

@@ -21,20 +21,20 @@ import org.slf4j.LoggerFactory
 
 private const val MESSAGE_TYPE_HEADER = "x-amz-sns-message-type"
 
-interface SNSHandler : Handler<RoutingContext> {
+public interface SNSHandler : Handler<RoutingContext> {
 
-  fun setOnNotification(handler: NotificationHandler): SNSHandler
-  fun setOnSubscriptionConfirmation(handler: SubscriptionConfirmationHandler): SNSHandler
-  fun setOnUnsubscribeConfirmation(handler: UnsubscribeConfirmationHandler): SNSHandler
+  public fun setOnNotification(handler: NotificationHandler): SNSHandler
+  public fun setOnSubscriptionConfirmation(handler: SubscriptionConfirmationHandler): SNSHandler
+  public fun setOnUnsubscribeConfirmation(handler: UnsubscribeConfirmationHandler): SNSHandler
 
-  companion object {
-    fun create(httpClient: HttpClient): SNSHandler = SNSHandlerImpl(httpClient)
-    fun create(vertx: Vertx): SNSHandler = create(vertx.createHttpClient())
+  public companion object {
+    public fun create(httpClient: HttpClient): SNSHandler = SNSHandlerImpl(httpClient)
+    public fun create(vertx: Vertx): SNSHandler = create(vertx.createHttpClient())
   }
 }
 
 
-class SNSHandlerImpl(private val httpClient: HttpClient) : SNSHandler {
+internal class SNSHandlerImpl(private val httpClient: HttpClient) : SNSHandler {
 
   companion object {
     private val logger = LoggerFactory.getLogger(SNSHandlerImpl::class.java)
