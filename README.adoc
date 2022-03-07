@@ -1,31 +1,38 @@
-= Sns-handler
+= Vert.x Web Handler for HTTP/S-based AWS SNS Endpoints
 
-image:https://img.shields.io/badge/vert.x-4.2.4-purple.svg[link="https://vertx.io"]
+Easy to use handler for AWS SNS messages based on Vert.x 4.2.4 and written in Kotlin.
 
-This application was generated using http://start.vertx.io
+== Usage
+The handler requires a `BodyHandler` to be registered on the route. Handlers for messages can be
+added for each of the message types supported by SNS. Each handler must return a value to indicate
+how to proceed with the received message. Following combinations are possible:
 
-== Building
+[options="header"]
+|======================================================
+| Message Type               | Possible Results                 
+| Notification               | Acknowledge, Unsubscribe
+| Subscription Confirmation  | Acknowledge, Ignore     
+| Unsubscribe Confirmation   | Acknowledge, Resubscribe
+|======================================================
 
-To launch your tests:
+```kotlin
+router.post("/sns")
+    .handler(BodyHandler.create(false))
+    .handler(
+        SNSHandler.create(vertx.createHttpClient())
+            .setOnNotification { notification ->
+                // handle notification
+                NotificationHandler.Acknowledge
+            }.setOnSubscriptionConfirmation { subscriptionConfirmation ->
+                // handle subscription confirmation
+                SubscriptionConfirmationHandler.Acknowledge
+            }.setOnUnsubscribeConfirmation { unsubscribeNotification ->
+                // handle unsubscribe confirmation
+                UnsubscribeConfirmationHandler.Acknowledge
+            }
+    )
 ```
-./gradlew clean test
-```
 
-To package your application:
-```
-./gradlew clean assemble
-```
-
-To run your application:
-```
-./gradlew clean run
-```
-
-== Help
-
-* https://vertx.io/docs/[Vert.x Documentation]
-* https://stackoverflow.com/questions/tagged/vert.x?sort=newest&pageSize=15[Vert.x Stack Overflow]
-* https://groups.google.com/forum/?fromgroups#!forum/vertx[Vert.x User Group]
-* https://gitter.im/eclipse-vertx/vertx-users[Vert.x Gitter]
-
-
+== Dependencies
+* Kotlin
+* Slf4j API
