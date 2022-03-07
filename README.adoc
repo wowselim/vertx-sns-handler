@@ -1,4 +1,4 @@
-= Vert.x Web Handler for HTTP/S-based AWS SNS Endpoints
+= Vert.x Web Handler for https://docs.aws.amazon.com/sns/latest/dg/sns-http-https-endpoint-as-subscriber.html[HTTP/S-based AWS SNS Endpoints]
 
 Easy to use handler for AWS SNS messages based on Vert.x 4.2.4 and written in Kotlin.
 
